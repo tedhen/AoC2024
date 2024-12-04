@@ -1,39 +1,36 @@
 """AoC 2024 Day 2"""
 
-
-
 def safety_test(report):
     """Test if the levels are safe"""
-    first = True
     inc = True
+
+    if report[0] > report[1]:
+        inc = False
+
     for x, y in zip(report, report[1:]):
         if not 1 <= abs(x-y) <= 3:
             return False
         if x == y:
             return False
 
-        if first:
+        if inc:
             if x > y:
-                inc = False
-            first = False
+                return False
         else:
-            if inc:
-                if x > y:
-                    return False
-            else:
-                if x < y:
-                    return False
+            if x < y:
+                return False
     return True
 
 def extended_safety(report):
+    """Test if removing any of the levels makes it safe"""
     if safety_test(report=report):
         return True
-    else:
-        for i in range(len(report)):
-            new_report = report.copy()
-            new_report.pop(i)
-            if safety_test(new_report):
-                return True
+
+    for i in range(len(report)):
+        new_report = report.copy()
+        new_report.pop(i)
+        if safety_test(new_report):
+            return True
 
     return False
 
@@ -47,8 +44,8 @@ def main():
             report = [int(y) for y in x.split()]
             test.append(safety_test(report))
             ext_test.append(extended_safety(report))
-        print(sum(test))        
-        print(sum(ext_test))        
+        print(sum(test))
+        print(sum(ext_test))
 
 if __name__ == '__main__':
     main()
